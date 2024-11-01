@@ -5,7 +5,7 @@ Client requests an entire directory from Server , and copies it to its own direc
 
 - I have decided to separate the programs in 2 different directories , because remoteClient will delete all files if it exists in the same directory as dataServer.
 
--Inside directory Client there is the remoteClient.cpp and a Makefile , which creates the remoteClient objective and executable.
+- Inside directory Client there is the remoteClient.cpp and a Makefile , which creates the remoteClient objective and executable.
     remoteClient is executed with this command when inside Client directory : ./remoteClient -i <server_ip> -p <server_port> -d <directory>
 
 - Inside directory Server there is the dataServer.cpp and a Makefile , which creates the dataServer objective and executable.
