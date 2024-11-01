@@ -47,21 +47,23 @@ Then loop breaks , if there are no available worker_threads then flag remains 0 
 
 ### Main
         
-    - First of all , we initialize some global variables so that the threads can access them (std::queue<worker_thread_data> execute_queue , std::vector<used_socket *> socket_vector , int              MAX_QUEUE_SIZE , pthread_t *worker_thread , pthread_mutex_t *worker_mutex , bool *used , int pool_size , int block_size ). 
-    - Int pool_size is the number of worker_threads to be created , int block_size is the number of bytes to read and write the file in the socket , int MAX_QUEUE_SIZE is the maximum number of         elements inside the execute_queue .
-    - Variable pthread_t *worker_thread is a table to save all worker_threads to be created(is dynamically allocated in main) , pthread_mutex_t *worker_mutex is a table of mutexes 1 per                worker_thread(again dynamically allocated in main) and bool *used is a table of bool variables 1 for each worker_thread , which is set to 1 if a worker_thread is currently used (again 
-      dynamically allocated in main).
-
-    - Define some variables needed for the rest of the code , int server_port saves port of the server , remoteClient_sock saves value of socket for Client-Server communication . struct                sockaddr_in dataServer, remoteClient stores Server-Client accordingly. Now main runs a check for all arguments given and stores values to respective variables. Variable pool_size has been        stored so now we dynamically allocate worker_thread table , worker_mutex table and bool used table.
+- First of all , we initialize some global variables so that the threads can access them (std::queue<worker_thread_data> execute_queue , std::vector<used_socket *> socket_vector , int              MAX_QUEUE_SIZE , pthread_t *worker_thread , pthread_mutex_t *worker_mutex , bool *used , int pool_size , int block_size ). 
     
-    - For loop to create struct worker_thread_argument * (Arg*) , initialize 1 mutex for each worker_thread , worker_arg->smp takes the value of &worker_mutex[i] and worker_arg->used takes value       of &used[i]. Then we call function pthread_create top create the worker_thread and pass argument Arg* to worker_thread_f function.
+- Int pool_size is the number of worker_threads to be created , int block_size is the number of bytes to read and write the file in the socket , int MAX_QUEUE_SIZE is the maximum number of         elements inside the execute_queue .
+    
+- Variable pthread_t *worker_thread is a table to save all worker_threads to be created(is dynamically allocated in main) , pthread_mutex_t *worker_mutex is a table of mutexes 1 per                worker_thread(again dynamically allocated in main) and bool *used is a table of bool variables 1 for each worker_thread , which is set to 1 if a worker_thread is currently used (again 
+  dynamically allocated in main).
 
-    - Call socket function  then call bind function to bind socket sock to the dataServer struct. Server call listen function and waits for a connection to the socket sock. Since connect was           called from remoteClient , now dataServer enters while loop and calls accept , to accept connection from remoteClient (remoteClient_sock now stores the socket for Client-Server                   communication).
+- Define some variables needed for the rest of the code , int server_port saves port of the server , remoteClient_sock saves value of socket for Client-Server communication . struct                sockaddr_in dataServer, remoteClient stores Server-Client accordingly. Now main runs a check for all arguments given and stores values to respective variables. Variable pool_size has been        stored so now we dynamically allocate worker_thread table , worker_mutex table and bool used table.
+    
+- For loop to create struct worker_thread_argument * (Arg*) , initialize 1 mutex for each worker_thread , worker_arg->smp takes the value of &worker_mutex[i] and worker_arg->used takes value       of &used[i]. Then we call function pthread_create top create the worker_thread and pass argument Arg* to worker_thread_f function.
 
-    - Server dynamically allocates memory and creates a new pointer struct used_socket* . Variable usock->used is set to 0 none reads/writes on the socket at the moment and usock->socket takes         the value of remoteClient_sock . Call pthread_mutex_init to intialize the mutex variable of struct usock(usock->client_mtx) , call pthread_cond_init
-      to initialize condition variableof struct pointer usock (usock->condvar). Finally , we insert the pointer struct usock* to the vectorand dataServer wait for the next connection of                remoteClient.
+- Call socket function  then call bind function to bind socket sock to the dataServer struct. Server call listen function and waits for a connection to the socket sock. Since connect was           called from remoteClient , now dataServer enters while loop and calls accept , to accept connection from remoteClient (remoteClient_sock now stores the socket for Client-Server                   communication).
 
-    - Reason we use struct is to ensure that only 1 worker thread will be able to write to the socket and all other worker_threads that communicate through the same socket will wait for the            worker_thread currently writing to finish.
+- Server dynamically allocates memory and creates a new pointer struct used_socket* . Variable usock->used is set to 0 none reads/writes on the socket at the moment and usock->socket takes         the value of remoteClient_sock . Call pthread_mutex_init to intialize the mutex variable of struct usock(usock->client_mtx) , call pthread_cond_init
+  to initialize condition variableof struct pointer usock (usock->condvar). Finally , we insert the pointer struct usock* to the vectorand dataServer wait for the next connection of                remoteClient.
+
+- Reason we use struct is to ensure that only 1 worker thread will be able to write to the socket and all other worker_threads that communicate through the same socket will wait for the            worker_thread currently writing to finish.
 
 Further explanation on worker_thread. 
 
