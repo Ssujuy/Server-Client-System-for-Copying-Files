@@ -33,7 +33,7 @@ Client requests an entire directory from Server , and copies it to its own direc
 
   Further usage of those structs will be explained later.
 
-### Functions :
+### Functions
 
     - void recursive_scan(char *dirpath, int sock) : Funtion recursive_scan gets the path of directory to be scanned with char *dirpath , opens the directory with opendir and iterates all              contents of directory with readdir function.
 
@@ -45,7 +45,7 @@ Client requests an entire directory from Server , and copies it to its own direc
 
 Then loop breaks , if there are no available worker_threads then flag remains 0 and function is called again , until a worker is available.
 
-### Main : 
+### Main
         
     - First of all , we initialize some global variables so that the threads can access them (std::queue<worker_thread_data> execute_queue , std::vector<used_socket *> socket_vector , int              MAX_QUEUE_SIZE , pthread_t *worker_thread , pthread_mutex_t *worker_mutex , bool *used , int pool_size , int block_size ). 
     - Int pool_size is the number of worker_threads to be created , int block_size is the number of bytes to read and write the file in the socket , int MAX_QUEUE_SIZE is the maximum number of         elements inside the execute_queue .
