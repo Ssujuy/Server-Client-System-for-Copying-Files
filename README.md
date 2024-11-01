@@ -67,7 +67,7 @@ Further explanation on worker_thread.
 
     - Threads :
 
-        - **communication_thread :
+        - **communication_thread :**
 
             - A new communication_thread is created , when a new connection arrives on dataServer. The communication_thread then takes value of socket(remoteClient_sock) as argument and reads                  path of directory from remoteClient through the socket. Then calls recursive_scan function to scan the entire directory
 
