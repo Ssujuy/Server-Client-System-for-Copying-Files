@@ -73,7 +73,7 @@ Further explanation on worker_thread.
 
   - A new communication_thread is created , when a new connection arrives on dataServer. The communication_thread then takes value of socket(remoteClient_sock) as argument and reads                  path of directory from remoteClient through the socket. Then calls recursive_scan function to scan the entire directory
 
-  - **worker_thread :** 
+- **worker_thread :** 
 
     - First of all , worker_thread saves the argument given upon creation to a Arg* worker_arg variable and because we want the threads to be blocked on creation we lock the worker_arg->               smp mutex twice before the while loop and inside the while loop , otherwise worker_threads will start poping structs that don't exist in the queue. Set *worker_arg->used before                   locking , because worker_thread is not used as of now.
             
